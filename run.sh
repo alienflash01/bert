@@ -7,7 +7,7 @@ export BERT_BASE_DIR="$cur_dir"/model/chinese_L-12_H-768_A-12 # or multilingual_
 export STAR_DATA_DIR="$cur_dir"/star_data/
 
 python run_classifier.py \
-  --task_name=XNLI \
+  --task_name=STAR \
   --do_train=true \
   --do_eval=true \
   --data_dir=$STAR_DATA_DIR \
@@ -18,4 +18,4 @@ python run_classifier.py \
   --train_batch_size=32 \
   --learning_rate=5e-5 \
   --num_train_epochs=2.0 \
-  --output_dir=/tmp/xnli_output/
+  --output_dir="$cur_dir"/star_output/
