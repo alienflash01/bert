@@ -373,6 +373,51 @@ class ColaProcessor(DataProcessor):
           InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
 
+class StarProcessor(DataProcessor):
+  """Star 数据集的 Processor类"""
+
+  def get_train_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "star_train.tsv")), "train")
+
+  def get_dev_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "star_dev.tsv")), "dev")
+
+  def get_test_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "star_test.tsv")), "test")
+  
+  # 这里需要使用自己的标签，从data_dir的 label.tsv文件中读取
+  def get_labels(self, data_dir):
+    """See base class."""
+    labels = []
+    with open(os.path.join(data_dir, "label.tsv")) as f:
+      for line in f:
+        labels.append(line.strip())
+    return labels 
+
+  # todo: 对于test数据集，是否需要处理label文本
+  # todo: guid 的作用
+  def _create_examples(self, lines, set_type):
+    """Creates examples for the training and dev sets."""
+    examples = []
+    for (i, line) in enumerate(lines):
+      guid = "%s-%s" % (set_type, i)
+      text_a = tokenization.convert_to_unicode(line[1])
+      label = tokenization.convert_to_unicode(line[0])
+  
+      # if set_type == "test":
+      #   label = "0"
+      # else:
+      #   label = tokenization.convert_to_unicode(line[0])
+
+      examples.append(
+          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+    return examples
 
 def convert_single_example(ex_index, example, label_list, max_seq_length,
                            tokenizer):
@@ -788,6 +833,7 @@ def main(_):
       "mnli": MnliProcessor,
       "mrpc": MrpcProcessor,
       "xnli": XnliProcessor,
+      "star": StarProcessor, #添加一个 认星星 的任务
   }
 
   tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,
