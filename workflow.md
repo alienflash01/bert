@@ -91,4 +91,4 @@ wget https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-
 
 #### 训练模型
 
-直接使用`run.sh`文件，需要修改参数调参（todo）
+直接使用`run.sh`文件，需要修改参数（todo）

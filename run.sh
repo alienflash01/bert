@@ -1,12 +1,16 @@
 #!/bin/bash
 
-cd "$(dirname $0)" || exit 
+source activate fwei_py36 #使用tensorflow-gpu
+
+set -x
+
+cd "$(dirname $0)" || exit 1 
 cur_dir=$(pwd)
 
 export BERT_BASE_DIR="$cur_dir"/model/chinese_L-12_H-768_A-12 # or multilingual_L-12_H-768_A-12
 export STAR_DATA_DIR="$cur_dir"/star_data/
 
-python run_classifier.py \
+time python run_classifier.py \
   --task_name=STAR \
   --do_train=true \
   --do_eval=true \
