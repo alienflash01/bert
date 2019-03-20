@@ -11,7 +11,7 @@ def getNewLines(filePath):
                 print("get type keyword: ", line)
             else:
                 content, tag = line.strip().split("\t")
-                newLine = "\t".join([tag, re.sub("[\s+\.\!\/_,$%^*(+\"\']+|[+——！，。？、~@#￥%……&*（）★]+", "",content)])
+                newLine = "\t".join([tag, content])
                 newLines.append(newLine)
         print("line num is ", len(newLines))
     random.shuffle(newLines)

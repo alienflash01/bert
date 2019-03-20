@@ -173,6 +173,5 @@ star_data/oriData/offical_data/test_XNLI/__MACOSX/XNLI-1.0/._xnli.dev.tsv
 star_data/oriData/offical_data/test_XNLI/__MACOSX/XNLI-1.0/._xnli.test.tsv
 star_data/oriData/star_data/test.tsv
 star_data/oriData/star_data/test.zip
-star_data/oriData/star_data/train.tsv
 star_data/oriData/star_data/train.zip
 model/chinese_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001

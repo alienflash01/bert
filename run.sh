@@ -1,8 +1,18 @@
 #!/bin/bash
 
+
 source activate fwei_py36 #使用tensorflow-gpu
 
 set -x
+
+#todo: 判断$1 是否为数字
+if [ x$1 = x'' ]; then
+  CUDA_DEVICE_INDEX=0
+else
+  CUDA_DEVICE_INDEX="$1"
+fi
+
+export CUDA_VISIBLE_DEVICES=CUDA_DEVICE_INDEX
 
 cd "$(dirname $0)" || exit 1 
 cur_dir=$(pwd)
