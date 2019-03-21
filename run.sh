@@ -12,7 +12,7 @@ else
   CUDA_DEVICE_INDEX="$1"
 fi
 
-export CUDA_VISIBLE_DEVICES=CUDA_DEVICE_INDEX
+export CUDA_VISIBLE_DEVICES=$CUDA_DEVICE_INDEX
 
 cd "$(dirname $0)" || exit 1 
 cur_dir=$(pwd)

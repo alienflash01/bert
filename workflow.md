@@ -85,10 +85,18 @@ wget https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-
     - label.tsv, 该文件里面保存所有的标签（一行一个）
 3. 进入到star_data 目录下，使用dataProcess.py可以生成需要的文件。
 
-#### 修改代码
+#### 添加模型文件
+
+新建model文件夹，存放原始的`chinese_L-12_H-768_A-12`模型，因为github仅支持100M以下的文件，所以需要自行下载原始模型文件并解压放到该目录下。
+
+#### 代码修改
 
 1. 添加一个StarProcessor 类，需要分别实现`get_train_examples`、`get_dev_examples`、`get_test_examples`、`get_labels`、`_create_examples`方法
 
 #### 训练模型
 
-直接使用`run.sh`文件，需要修改参数（todo）
+运行`run.sh`文件即可
+
+#### 预测（todo）
+
+目前打算使用 tensor_servicing的形式，docker环境已经在机器上配置完成，相关脚本未实现。
