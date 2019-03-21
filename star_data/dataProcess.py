@@ -1,6 +1,6 @@
 #coding=utf-8
 import random,os
-import re
+import re,csv
 
 def getNewLines(filePath):
     """生成一个乱序的list，每个元素是 label+'\t'+内容的形式 """
@@ -55,7 +55,18 @@ def get_labels(data_dir):
             labels.append(line.strip())
     return labels 
 
+def getTestSet():
+    lines = []
+    with open("./test.tsv","r", encoding="UTF-8", errors='ignore') as f: 
+        for line in f:
+                newLine = "\t".join(["hello ", line.strip()])
+                lines.append(newLine)
+    with open("./test-t.tsv", 'w+', encoding="UTF-8") as newFile:        
+        for line in lines:
+            newFile.write(line +'\n')
+
 def main():
-    getDataSet("./oriData/star_data/train.tsv", "./star_train.tsv","star_dev.tsv")
-    getLabel("./oriData/star_data/train.tsv", "./label.tsv")
+    # getDataSet("./oriData/star_data/train.tsv", "./star_train.tsv","star_dev.tsv")
+    # getLabel("./oriData/star_data/train.tsv", "./label.tsv")
+    getTestSet()
 main()
