@@ -407,12 +407,10 @@ class StarProcessor(DataProcessor):
     examples = []
     for (i, line) in enumerate(lines):
       guid = "%s-%s" % (set_type, i)
-
+      text_a = tokenization.convert_to_unicode(line[1])
       if set_type == "test":
          label = "0"
-         text_a = tokenization.convert_to_unicode(line[0])
       else:
-        text_a = tokenization.convert_to_unicode(line[1])
         label = tokenization.convert_to_unicode(line[0])
 
       examples.append(
@@ -1010,6 +1008,7 @@ def main(_):
             for class_probability in probabilities) + "\n"
         writer.write(output_line)
         num_written_lines += 1
+        tf.logging.info("  num = %d, result = %s", num_written_lines, output_line)
     assert num_written_lines == num_actual_predict_examples
 
 
