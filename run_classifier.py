@@ -409,7 +409,7 @@ class StarProcessor(DataProcessor):
       guid = "%s-%s" % (set_type, i)
       text_a = tokenization.convert_to_unicode(line[1])
       if set_type == "test":
-         label = "0"
+        label = "服饰鞋帽--女鞋--雨鞋/雨靴" #label 必须在get_labels中
       else:
         label = tokenization.convert_to_unicode(line[0])
 
@@ -824,7 +824,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
 
 def main(_):
-  tf.logging.set_verbosity(tf.logging.INFO)
+  tf.logging.set_verbosity(tf.logging.WARN)
 
   processors = {
       "cola": ColaProcessor,
@@ -1003,12 +1003,15 @@ def main(_):
         probabilities = prediction["probabilities"]
         if i >= num_actual_predict_examples:
           break
-        output_line = "\t".join(
-            str(class_probability)
-            for class_probability in probabilities) + "\n"
-        writer.write(output_line)
+        
+        # 获取具有最大概率的分类的label
+        probabilities_list = probabilities.tolist()
+        max_probility_value = max(probabilities_list)
+        max_probility_index = probabilities_list.index(max_probility_value)
+        max_probility_class = label_list[max_probility_index]
+        outline = "\t".join([str(num_written_lines), max_probility_class, predict_examples[i].text_a])+"\n"
+        writer.write(outline)
         num_written_lines += 1
-        tf.logging.info("  num = %d, result = %s", num_written_lines, output_line)
     assert num_written_lines == num_actual_predict_examples
 
 
