@@ -990,15 +990,17 @@ def main(_):
     # 获取test文本
     if FLAGS.star_test_file:
       predict_examples = processor.get_test_examples_with_filepath(FLAGS.star_test_file)
-      logging.INFO("start readfile, use test file: %s", FLAGS.star_test_file)
+      logging.info("start readfile, use test file: %s", FLAGS.star_test_file)
     else:
       predict_examples = processor.get_test_examples(FLAGS.data_dir)
-      logging.INFO("start readfile, use test file: %s", os.path.join(FLAGS.data_dir, "star_dev.tsv"))
+      test_path = os.path.join(FLAGS.data_dir, "star_test.tsv")
+      print(test_path)
+      logging.info('start readfile, use test file: %s', test_path)
     
-    logging.INFO("Done: read test file")
+    logging.info("Done: read test file")
     num_actual_predict_examples = len(predict_examples)
     endTime = time.time()
-    logging.INFO("read file time is %d", endTime - startTime)
+    logging.info("read file time is %d", endTime - startTime)
     # 预测结果保留的目录
     predict_file = os.path.join(FLAGS.output_dir, "predict.tf_record")
     file_based_convert_examples_to_features(predict_examples, label_list,
@@ -1021,7 +1023,7 @@ def main(_):
     startTime = time.time()
     result = estimator.predict(input_fn=predict_input_fn)
     endTime = time.time()
-    logging.INFO("predict file time is %d", endTime - startTime)
+    logging.info("predict file time is %d", endTime - startTime)
     output_predict_file = os.path.join(FLAGS.output_dir, "test_results.tsv")
     with tf.gfile.GFile(output_predict_file, "w") as writer:
       num_written_lines = 0
