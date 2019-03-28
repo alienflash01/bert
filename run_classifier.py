@@ -26,6 +26,10 @@ import optimization
 import tokenization
 import tensorflow as tf
 
+
+import logging
+import time
+
 flags = tf.flags
 
 FLAGS = flags.FLAGS
@@ -123,6 +127,8 @@ flags.DEFINE_integer(
     "num_tpu_cores", 8,
     "Only used if `use_tpu` is True. Total number of TPU cores to use.")
 
+# 直接指定测试文件，不使用目录
+tf.flags.DEFINE_string("star_test_file", None, "Path of star test file")
 
 class InputExample(object):
   """A single training/test example for simple sequence classification."""
@@ -386,11 +392,18 @@ class StarProcessor(DataProcessor):
     return self._create_examples(
         self._read_tsv(os.path.join(data_dir, "star_dev.tsv")), "dev")
 
+  def get_test_examples_with_filepath(self, data_path):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(data_path), "test")
+  
   def get_test_examples(self, data_dir):
     """See base class."""
     return self._create_examples(
-        self._read_tsv(os.path.join(data_dir, "star_test.tsv")), "test")
-  
+      self._read_tsv(os.path.join(data_dir, "star_test.tsv")), "test")
+
+
+
   # 这里需要使用自己的标签，从data_dir的 label.tsv文件中读取
   def get_labels(self, data_dir):
     """See base class."""
@@ -824,7 +837,7 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
 
 def main(_):
-  tf.logging.set_verbosity(tf.logging.WARN)
+  tf.logging.set_verbosity(tf.logging.INFO)
 
   processors = {
       "cola": ColaProcessor,
@@ -970,10 +983,22 @@ def main(_):
         writer.write("%s = %s\n" % (key, str(result[key])))
 
   if FLAGS.do_predict:
-    # 获取test文本
-    predict_examples = processor.get_test_examples(FLAGS.data_dir)
-    num_actual_predict_examples = len(predict_examples)
+    LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+    logging.basicConfig(filename='test.log', level=logging.DEBUG, format=LOG_FORMAT)
 
+    startTime = time.time()
+    # 获取test文本
+    if FLAGS.star_test_file:
+      predict_examples = processor.get_test_examples_with_filepath(FLAGS.star_test_file)
+      logging.INFO("start readfile, use test file: %s", FLAGS.star_test_file)
+    else:
+      predict_examples = processor.get_test_examples(FLAGS.data_dir)
+      logging.INFO("start readfile, use test file: %s", os.path.join(FLAGS.data_dir, "star_dev.tsv"))
+    
+    logging.INFO("Done: read test file")
+    num_actual_predict_examples = len(predict_examples)
+    endTime = time.time()
+    logging.INFO("read file time is %d", endTime - startTime)
     # 预测结果保留的目录
     predict_file = os.path.join(FLAGS.output_dir, "predict.tf_record")
     file_based_convert_examples_to_features(predict_examples, label_list,
@@ -993,8 +1018,10 @@ def main(_):
         drop_remainder=False)
 
     # 优化器执行预测
+    startTime = time.time()
     result = estimator.predict(input_fn=predict_input_fn)
-
+    endTime = time.time()
+    logging.INFO("predict file time is %d", endTime - startTime)
     output_predict_file = os.path.join(FLAGS.output_dir, "test_results.tsv")
     with tf.gfile.GFile(output_predict_file, "w") as writer:
       num_written_lines = 0

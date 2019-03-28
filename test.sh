@@ -26,6 +26,8 @@ time python run_classifier.py \
   --data_dir=$STAR_DATA_DIR \
   --vocab_file=$BERT_BASE_DIR/vocab.txt \
   --bert_config_file=$BERT_BASE_DIR/bert_config.json \
-  --init_checkpoint="$cur_dir"/star_output/train_output_model/model.ckpt-56250 \
+  --init_checkpoint="$cur_dir"/star_output/traind_model/model.ckpt-62500 \
   --max_seq_length=256 \
-  --output_dir="$cur_dir"/star_output/test_output
+  --predict_batch_size=16 \
+  --output_dir="$cur_dir"/star_output/test_output \
+  --star_test_file="XXX"
